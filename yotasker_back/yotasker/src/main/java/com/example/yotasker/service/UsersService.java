@@ -11,10 +11,5 @@ import org.springframework.stereotype.Service;
 public class UsersService {
     @Autowired
     private UsersRepository usersRepo;
-    @Transactional
-    public boolean signIn(AuthRequest loginDto) {
 
-        User user = usersRepo.findByLogin(loginDto.getLogin());
-        return user != null && user.getPassword() == loginDto.getPassword();
-    }
 }

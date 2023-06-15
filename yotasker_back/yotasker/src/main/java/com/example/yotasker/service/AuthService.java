@@ -1,10 +1,12 @@
 package com.example.yotasker.service;
+import com.example.yotasker.dto.AuthRequest;
 import com.example.yotasker.dto.AuthResponse;
 import com.example.yotasker.dto.Token;
 import com.example.yotasker.dto.User;
 import com.example.yotasker.enums.TokenType;
 import com.example.yotasker.repo.TokenRepository;
 import com.example.yotasker.repo.UsersRepository;
+import com.example.yotasker.service.jwt.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,25 +31,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthResponse register(RegisterRequest request) {
-        var user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
-                .build();
-        var savedUser = repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(savedUser, jwtToken);
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
-    }
-
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthResponse authenticate(AuthRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -60,7 +44,7 @@ public class AuthService {
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
-        return AuthenticationResponse.builder()
+        return AuthResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -107,7 +91,7 @@ public class AuthService {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
                 saveUserToken(user, accessToken);
-                var authResponse = AuthenticationResponse.builder()
+                var authResponse = AuthResponse.builder()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)
                         .build();

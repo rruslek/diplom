@@ -6,6 +6,7 @@ import com.example.yotasker.service.AuthService;
 import com.example.yotasker.service.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,11 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
+@RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
 @CrossOrigin(origins="http://localhost:3000/", allowCredentials = "true")
 public class AuthController {
-    @Autowired
-    private UsersService usersService;
-
     private final AuthService service;
 
     @PostMapping("/authenticate")
