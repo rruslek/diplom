@@ -30,12 +30,12 @@ public class Task {
     @JoinColumn(name = "creator_id")
     private User creator;
 
-    @ManyToMany(mappedBy = "resolvedTasks")
+    @ManyToMany(mappedBy = "task")
     private List<User> users;
 
     @Column(name = "date")
     private Date date;
 
-    @Column(name = "date")
+    @Column(name = "deadline")
     private Date deadline;
 }
