@@ -1,4 +1,6 @@
 package com.example.yotasker.dto;
+import com.example.yotasker.enums.TaskStatus;
+import com.example.yotasker.enums.TokenType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,9 @@ public class Task {
     @Column(name = "name")
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    public TaskStatus status = TaskStatus.NEW;
+
     @ManyToOne
     @JoinColumn(name = "task_id")
     private Project project;
@@ -30,8 +35,9 @@ public class Task {
     @JoinColumn(name = "creator_id")
     private User creator;
 
-    @ManyToMany(mappedBy = "task")
-    private List<User> users;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "date")
     private Date date;

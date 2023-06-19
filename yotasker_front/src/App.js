@@ -1,12 +1,17 @@
 import React from 'react';
+import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import './App.css';
 import { Auth } from './pages/Auth'
+import { Registration } from './pages/Registration'
 import { Main } from './pages/Main'
-import { Route, Routes } from 'react-router';
 
 const App = () => {
   return (
-      <Auth/>
+    <Routes>
+      <Route path="/" element={<Main/>} />
+      <Route path="/login" element={<Auth/>} />
+      <Route path="/register" element={<Registration/>} />
+    </Routes>
   )
 }
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,9 +9,42 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserData, selectIsAuth } from '../../redux/slices/auth';
+import { Navigate } from 'react-router-dom';
 
 
 const Auth = () => {
+    const isAuth = useSelector(selectIsAuth);
+    const dispatch = useDispatch();
+    const {register, handleSubmit, setError, formState: { errors, isValid }} = useForm({
+        defaultValues: {
+            email: 'admin@mail.com',
+            password: 'password123'
+        },
+        mode: 'all'
+    });
+
+    const onSubmit = async (values) => {
+        const data = await dispatch(fetchUserData(values));
+
+        if (!data.payload) {
+            return alert('Не удалось авторизоваться!');
+        }
+
+        if ('access_token' in data.payload) {
+            localStorage.setItem('token', data.payload.access_token);
+        } else {
+            alert('Не удалось авторизоваться!');
+        }
+    };
+
+    if (isAuth) {
+        return <Navigate to="/" />
+    };
+
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -29,28 +62,26 @@ const Auth = () => {
                 <Typography component="h1" variant="h5">
                     Вход в систему
                 </Typography>
-                <Box component="form" 
-                //onSubmit={handleSubmit}
-                 noValidate sx={{ mt: 1 }}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                     <TextField
                         margin="normal"
                         required
                         fullWidth
-                        id="login"
                         label="Логин"
-                        name="login"
-                        autoComplete="login"
                         autoFocus
+                        error={Boolean(errors.email?.message)}
+                        helperText={errors.email?.message}
+                        {...register('email', { required: 'Укажите логин'})}
                     />
                     <TextField
                         margin="normal"
                         required
                         fullWidth
-                        name="password"
                         label="Пароль"
                         type="password"
-                        id="password"
-                        autoComplete="current-password"
+                        error={Boolean(errors.password?.message)}
+                        helperText={errors.password?.message}
+                        {...register('password', { required: 'Укажите пароль'})}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
@@ -64,7 +95,15 @@ const Auth = () => {
                     >
                         Войти
                     </Button>
-                </Box>
+                    <Link to="/register">
+                    <Button
+                        fullWidth
+                        variant="text"
+                    >
+                        Регистрация
+                    </Button>
+                    </Link>
+                    </form>
             </Box>
         </Container>
     );

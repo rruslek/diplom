@@ -13,10 +13,22 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import instance from '../../axios';
+import { useEffect } from 'react';
+import { Task } from '../../components/task';
+import { TaskList } from '../../components/taskList';
 
 const drawerWidth = 240;
 
 const Main = () => {
+  useEffect(() => {
+    instance.get('/users')
+  }, [])
+
+
+
+
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -62,9 +74,12 @@ const Main = () => {
         sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
       >
         <Toolbar />
-        <Typography paragraph>
-          Здесь будут ваши задачи
-        </Typography>
+        <h2>Новые:</h2>
+        <TaskList/>
+        <h2>В работе:</h2>
+        <TaskList/>
+        <h2>Выполнены: </h2>
+        <TaskList/>
       </Box>
     </Box>
   );

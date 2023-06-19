@@ -2,6 +2,7 @@ package com.example.yotasker.controllers;
 
 import com.example.yotasker.dto.AuthRequest;
 import com.example.yotasker.dto.AuthResponse;
+import com.example.yotasker.dto.RegisterRequest;
 import com.example.yotasker.service.AuthService;
 import com.example.yotasker.service.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +20,13 @@ import java.io.IOException;
 @CrossOrigin(origins="http://localhost:3000/", allowCredentials = "true")
 public class AuthController {
     private final AuthService service;
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> register(
+            @RequestBody RegisterRequest request
+    ) {
+        return ResponseEntity.ok(service.register(request));
+    }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthResponse> authenticate(

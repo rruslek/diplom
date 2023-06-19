@@ -1,8 +1,5 @@
 package com.example.yotasker.service;
-import com.example.yotasker.dto.AuthRequest;
-import com.example.yotasker.dto.AuthResponse;
-import com.example.yotasker.dto.Token;
-import com.example.yotasker.dto.User;
+import com.example.yotasker.dto.*;
 import com.example.yotasker.enums.TokenType;
 import com.example.yotasker.repo.TokenRepository;
 import com.example.yotasker.repo.UsersRepository;
@@ -31,6 +28,24 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    public AuthResponse register(RegisterRequest request) {
+        var user = User.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(request.getRole())
+                .build();
+        var savedUser = repository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(savedUser, jwtToken);
+        return AuthResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
     public AuthResponse authenticate(AuthRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -47,6 +62,7 @@ public class AuthService {
         return AuthResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .user(user)
                 .build();
     }
 
