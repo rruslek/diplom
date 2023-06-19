@@ -10,15 +10,28 @@ import { useEffect } from 'react';
 import { Task } from '../../components/task';
 import { TaskList } from '../../components/taskList';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { logout } from '../../redux/slices/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectIsAuth } from '../../redux/slices/auth';
+import { Navigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
 const Main = () => {
   useEffect(() => {
-    //instance.get('/users')
+    instance.get('/users')
   }, [])
+  const isAuth = useSelector(selectIsAuth);
+  const dispatch = useDispatch();
+  const onClickLogout = () => {
+      if (window.confirm('Вы действительно хотите выйти?')) {
+        dispatch(logout());
+      }
+  };
 
-
+  if (!isAuth) {
+    return <Navigate to="/login" />
+  };
   function stringToColor(string) {
     let hash = 0;
     let i;
@@ -60,7 +73,7 @@ const Main = () => {
       >
         <Toolbar>
           <Grid container spacing={0} align="center" direction="row" alignItems="center" justifyContent="center">
-            <Grid xs>
+            <Grid>
               <Typography variant="h6" noWrap component="div">
                 YoTasker
               </Typography>
@@ -70,8 +83,8 @@ const Main = () => {
                 Назначенные вам задачи
               </Typography>
             </Grid>
-            <Grid xs>
-              <Button variant="contained"><LogoutIcon /></Button>
+            <Grid>
+              <Button variant="contained" onClick={onClickLogout}><LogoutIcon /></Button>
             </Grid>
           </Grid>
         </Toolbar>
