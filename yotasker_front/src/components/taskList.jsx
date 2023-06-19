@@ -19,7 +19,8 @@ const TaskList = () => {
 }
 
 export const getTasks = async (status, user) => {
-    const { data } = await instance.get(`http://localhost:8080/tasks?status=NEW&user=1`);
+    //const { data } = await instance.get(`http://localhost:8080/tasks?status=NEW&user=1`);
+    const {data} = "1,2";
     return data;
   }
 
