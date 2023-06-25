@@ -14,7 +14,8 @@ import { logout } from '../../redux/slices/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectIsAuth } from '../../redux/slices/auth';
 import { Navigate } from 'react-router-dom';
-
+import { Boards } from '../../components/boards';
+import './style.css'
 const drawerWidth = 240;
 
 const Main = () => {
@@ -65,14 +66,14 @@ const Main = () => {
 
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', height: '100%' }}>
       <CssBaseline />
       <AppBar
         position="fixed"
         sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
       >
         <Toolbar>
-          <Grid container spacing={0} align="center" direction="row" alignItems="center" justifyContent="center">
+          <Grid container spacing={0} align="center" direction="row" alignItems="center" justifyContent="center" sx={{ height: '100%' }}>
             <Grid>
               <Typography variant="h6" noWrap component="div">
                 YoTasker
@@ -80,7 +81,7 @@ const Main = () => {
             </Grid>
             <Grid xs={10}>
               <Typography variant="h5" noWrap component="div">
-                Назначенные вам задачи
+                Проект 1
               </Typography>
             </Grid>
             <Grid>
@@ -128,15 +129,19 @@ const Main = () => {
       </Drawer>
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
+        sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3, height: '80%'  }}
       >
         <Toolbar />
-        <h2>Новые:</h2>
+        
+        {/* <h2>Новые:</h2>
         <TaskList />
         <h2>В работе:</h2>
         <TaskList />
         <h2>Выполнены: </h2>
-        <TaskList />
+        <TaskList /> */}
+
+        <Boards></Boards>
+
       </Box>
     </Box>
   );
